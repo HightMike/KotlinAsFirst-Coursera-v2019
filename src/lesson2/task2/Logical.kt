@@ -12,6 +12,8 @@ import lesson1.task1.sqr
 fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
     sqr(x - x0) + sqr(y - y0) <= sqr(r)
 
+
+
 /**
  * Простая
  *
@@ -48,7 +50,14 @@ fun daysInMonth(month: Int, year: Int): Int = TODO()
 fun circleInside(
     x1: Double, y1: Double, r1: Double,
     x2: Double, y2: Double, r2: Double
-): Boolean = TODO()
+): Boolean {
+    if (r2>r1) {
+        if ((x2-r2) >(x1-r1) && (x2+r2) >(x1+r1) && (y2-r2) >(y1-r1) && (y2+r2) >(y1+r1)) {
+            return true
+        }
+    }
+    return false
+}
 
 /**
  * Средняя

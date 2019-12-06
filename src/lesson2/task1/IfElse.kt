@@ -6,6 +6,9 @@ import lesson1.task1.discriminant
 import kotlin.math.max
 import kotlin.math.sqrt
 
+
+
+
 /**
  * Пример
  *
@@ -63,7 +66,20 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+
+    if (age in 10..20 || age in 110..120) {
+        return "$age лет"
+    }
+    return when (age%10) {
+        1 -> "$age год"
+        in 2..4 -> "$age года"
+        else -> "$age лет"
+    }
+}
+
+fun main() {
+}
 
 /**
  * Простая
@@ -76,7 +92,25 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double = TODO()
+): Double {
+
+    val lenght1 = t1*v1
+    val lenght2 = t2*v2
+    val lenght3 = t3*v3
+
+    val halfL = (lenght1+lenght2+lenght3)/2
+
+    if (lenght1>=halfL) {
+        return (halfL)/v1
+    }
+    else if ((lenght1+lenght2)>=halfL) {
+        return t1 + (halfL-lenght1)/v2
+    }
+    else {
+        return t1 + t2 + (halfL - (lenght1+lenght2))/v3
+    }
+
+}
 
 /**
  * Простая
@@ -127,4 +161,27 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    if (c<a) {
+        if (d>b) {
+            return b-a
+        }
+        else if (d in a..b) {
+            return d-a
+        }
+    }
+    if (c in a..b && d!in a..b) {
+        return b-c
+    }
+    else if (c in a..b && d in a..b) {
+        return d-c
+    }
+    return -1
+}
+
+fun checkMax(a: Int, b: Int):Int {
+    if (a>b){
+        return a
+    }
+    return b
+}
