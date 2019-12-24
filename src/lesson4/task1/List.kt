@@ -172,7 +172,20 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> = TODO()
  * Результат разложения вернуть в виде списка множителей, например 75 -> (3, 5, 5).
  * Множители в списке должны располагаться по возрастанию.
  */
-fun factorize(n: Int): List<Int> = TODO()
+fun factorize(n: Int): List<Int> {
+    var m=n
+    val acc = mutableListOf<Int>()
+    var i=2
+    while (m>1) {
+        if (m%i==0) {
+            acc.add(i)
+            m=m/i
+            i=1
+        }
+        i++
+    }
+    return acc
+}
 
 /**
  * Сложная
@@ -181,7 +194,27 @@ fun factorize(n: Int): List<Int> = TODO()
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String = TODO()
+fun factorizeToString(n: Int): String {
+    var m=n
+    val acc = mutableListOf<Int>()
+    var i=2
+    while (m>1) {
+        if (m%i==0) {
+            acc.add(i)
+            m=m/i
+            i=1
+        }
+        i++
+    }
+    return buildMul(acc)
+}
+
+fun buildMul(list: List<Int>) = list.joinToString(separator = "*")
+
+
+fun main() {
+    factorize(75)
+}
 
 /**
  * Средняя
