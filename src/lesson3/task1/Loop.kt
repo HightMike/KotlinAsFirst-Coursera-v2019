@@ -67,7 +67,20 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    when {
+        n<10 -> return 1
+        else -> {
+            var k=0
+            var m = n
+            while (m>=1) {
+                m=m/10
+                k++
+            }
+            return k
+        }
+    }
+}
 
 /**
  * Простая
@@ -133,7 +146,18 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var t=x
+    var k=0
+    while (t!=1) {
+        when {
+            t%2 != 0 -> t=3*t+1
+            else -> t=t/2
+        }
+        k++
+    }
+    return k
+}
 
 /**
  * Средняя
