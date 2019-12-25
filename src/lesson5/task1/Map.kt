@@ -148,26 +148,28 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> = TODO()
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    var res = ""
-    val mapC = mutableMapOf<String,String>()
+    val mapC = mutableMapOf<String, String>()
     for ((name, phone) in mapA) {
-        if (name in mapB && phone.contains(mapB.get(name))) {
+        if (name in mapB && !phone.equals(mapB.get(name))) {
             mapC.put(name, phone + ", " + mapB.get(name))
-           // res = phone + ", " + mapB.get(name)
-        }
-        else {
-            mapC.put(name,)
+        } else {
+            mapC.put(name, phone)
         }
     }
+    for ((name, phone) in mapB) {
+        if (name !in mapA) {
+            mapC.put(name, phone)
+        }
 
-    //val mapC: Map<String, String> = mapA + mapB;
+    }
     return mapC
-
 }
 
 fun main() {
-    mergePhoneBooks(mapOf("Emergency" to "112", "Police" to "02"),
-        mapOf("Emergency" to "911", "Police" to "02"))
+    mergePhoneBooks(
+        mapOf("Emergency" to "112", "Police" to "02"),
+        mapOf("Emergency" to "911", "Police" to "02")
+    )
 }
 
 /**
