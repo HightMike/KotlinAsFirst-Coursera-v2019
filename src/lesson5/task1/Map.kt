@@ -166,10 +166,16 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
 }
 
 fun main() {
-    mergePhoneBooks(
-        mapOf("Emergency" to "112", "Police" to "02"),
-        mapOf("Emergency" to "911", "Police" to "02")
-    )
+
+//    propagateHandshakes(
+//    mapOf(
+//        "Marat" to setOf("Mikhail", "Sveta"),
+//        "Sveta" to setOf("Marat"),
+//        "Mikhail" to setOf("Sveta")
+//            ))
+    hasAnagrams(listOf("рот", "свет", "тор"))
+
+    hasAnagrams(listOf("рот", "свет", "код", "дверь"))
 }
 
 /**
@@ -235,7 +241,28 @@ fun extractRepeats(list: List<String>): Map<String, Int> = TODO()
  * Например:
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
-fun hasAnagrams(words: List<String>): Boolean = TODO()
+fun hasAnagrams(words: List<String>): Boolean {
+
+    val newL = mutableListOf<String>()
+
+    for (i in words) {
+        val temp = i.alphabetized()
+        newL.add(temp)
+    }
+    val range1 = 0..newL.size-1
+    val range2 = 0..newL.size-1
+
+    for (n in range1) {
+        for (k in range2) {
+            if (newL[k].startsWith(newL[n]) && n!=k) {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+fun String.alphabetized() = String(toCharArray().apply { sort() })
 
 /**
  * Сложная
@@ -263,19 +290,23 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
 
-    var mapC = mutableMapOf<String, Set<String>>()
+    val mapC = mutableMapOf<String, Set<String>>()
 
     for ((name, peoples) in friends) {
         for (i in peoples) {
+
+            val check: Boolean = "Sveta" in name
+
             if (i in name) {
-                mapC.put(name, friends.get(i))
+//                val n: Set<String>? = friends[i]
+                mapC.put(name, value = friends.get(i)!!)
             }
         }
     }
-
+    return mapC
 }
 
-/**
+/**,yp
  * Сложная
  *
  * Для заданного списка неотрицательных чисел и числа определить,
