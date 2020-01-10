@@ -90,7 +90,11 @@ fun convertMonth(month: String):Int {
 }
 
 fun dateStrToDigit(str: String): String {
+    val numbers = str.split(" ")
 
+    for (number in numbers) {
+
+    }
 
 }
 
