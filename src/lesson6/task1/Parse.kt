@@ -2,6 +2,59 @@
 
 package lesson6.task1
 
+import java.lang.Exception
+import java.lang.NumberFormatException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+/**
+ * Средняя
+ *
+ * Дата представлена строкой вида "15 июля 2016".
+ * Перевести её в цифровой формат "15.07.2016".
+ * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
+ * При неверном формате входной строки вернуть пустую строку.
+ *
+ * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
+ * входными данными.
+ */
+
+fun convertMonth(month: String): Int {
+    val a = mapOf(
+        "января" to 1,
+        "февраля" to 2,
+        "марта" to 3,
+        "апреля" to 4,
+        "мая" to 5,
+        "июня" to 6,
+        "июля" to 7,
+        "августа" to 8,
+        "сентября" to 9,
+        "октября" to 10,
+        "ноября" to 11,
+        "декабря" to 12
+    )
+    return a.getValue(month)
+}
+
+fun convertStr(month: Int): String {
+    val a = mapOf(
+        1 to "января",
+        2 to "февраля",
+        3 to "марта",
+        4 to "апреля",
+        5 to "мая",
+        6 to "июня",
+        7 to "июля",
+        8 to "августа",
+        9 to "сентября",
+        10 to "октября",
+        11 to "ноября",
+        12 to "декабря"
+    )
+    return a.getValue(month)
+}
+
 /**
  * Пример
  *
@@ -39,63 +92,45 @@ fun timeSecondsToStr(seconds: Int): String {
     return String.format("%02d:%02d:%02d", hour, minute, second)
 }
 
+
 /**
  * Пример: консольный ввод
  */
 fun main() {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
-    if (line != null) {
-        val seconds = timeStrToSeconds(line)
-        if (seconds == -1) {
-            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
-        } else {
-            println("Прошло секунд с начала суток: $seconds")
-        }
-    } else {
-        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
-    }
+    println(dateStrToDigit(line!!))
+
+//    if (line != null) {
+//        val seconds = timeStrToSeconds(line)
+//        if (seconds == -1) {
+//            println("Введённая строка $line не соответствует формату ЧЧ:ММ:СС")
+//        } else {
+//            println("Прошло секунд с начала суток: $seconds")
+//        }
+//    } else {
+//        println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
+//    }
 }
 
-
-/**
- * Средняя
- *
- * Дата представлена строкой вида "15 июля 2016".
- * Перевести её в цифровой формат "15.07.2016".
- * День и месяц всегда представлять двумя цифрами, например: 03.04.2011.
- * При неверном формате входной строки вернуть пустую строку.
- *
- * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
- * входными данными.
- */
-
-fun convertMonth(month: String):Int {
-    val a = mapOf(
-        "января" to 1,
-        "февраля" to 2,
-        "марта" to 3,
-        "апреля" to 4,
-        "мая" to 5,
-        "июня" to 6,
-        "июля" to 7,
-        "августа" to 8,
-        "сентября" to 9,
-        "октября" to 10,
-        "ноября" to 11,
-        "декабря" to 12
-    )
-    return a.getValue(month)
-
-}
 
 fun dateStrToDigit(str: String): String {
     val numbers = str.split(" ")
+    var day = 0
+    var month = 0
+    var year = 0
 
-    for (number in numbers) {
-
+    try {
+        day = numbers[0].toInt()
+        month = convertMonth(numbers[1])
+        year = numbers[2].toInt()
+        var date = LocalDate.of(year, month, day)
+    } catch (e: Exception) {
+        return ""
     }
 
+    val finalStr = String.format("%02d.%02d.%d", day, month, year)
+    return finalStr
 }
 
 /**
@@ -108,7 +143,29 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+
+    val numbers = digital.split(".")
+    var day = 0
+    var month = 0
+    var year = 0
+
+    try {
+        day = numbers[0].toInt()
+        month = numbers[1].toInt()
+        year = numbers[2].toInt()
+        //val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        //var date = LocalDate.parse(digital, formatter)
+        var date2 = LocalDate.of(year, month, day)
+        if (numbers.size>3) {
+            throw NumberFormatException()
+        }
+    }catch (e: Exception) {
+        return ""
+    }
+    val finalStr = String.format("%d %s %d", day, convertStr(month), year)
+    return finalStr
+}
 
 /**
  * Средняя
