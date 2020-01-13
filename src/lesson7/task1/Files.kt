@@ -56,21 +56,54 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
 
 //fun addStrAndInt()
 
+
+fun numberOfOccurrences(source: String, sentence: String): Int {
+    var occurrences = 0
+
+    if (source.contains(sentence)) {
+        val withSentenceLength = source.length
+        val withoutSentenceLength = source.replace(sentence, "").length
+        occurrences = (withSentenceLength - withoutSentenceLength) / sentence.length
+    }
+
+    return occurrences
+}
+
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     var count = 0
     val countMap = mutableMapOf<String, Int>()
     for (string in substrings) {
         for (line in File(inputName).readLines()) {
-            for (word in line.split(" ")) {
-                if (string.toLowerCase().equals(word.toLowerCase())) {
-                    count++
-                }
-            }
+//            val p = Pattern.compile(string.toLowerCase())
+//            val m = p.matcher(line.toLowerCase())
+//            while (m.find()) {
+//                count++
+//            }
+//            for (word in line.split(" ")) {
+//                var j = 0
+//                while (j < word.length) {
+//                    if (word.toLowerCase().toLowerCase().contains(string.toLowerCase())) {
+//                        count++
+//                        j += string.length - 1
+//                    }
+//                    j++
+//                }
+//            }
+//            for (word in line.split(" ")) {
+//                var j = 0
+//                while (j < word.length) {
+//                    if (word.toLowerCase().contains(string.toLowerCase())) {
+//                        count = count + word.toLowerCase().split(string.toLowerCase()).size - 1
+//                    }
+//                }
+//            }
+
+            count = count + line.toLowerCase().split(string.toLowerCase()).size - 1
+
+//            count += numberOfOccurrences(line.toLowerCase(), string.toLowerCase())
         }
-        if (count > 0) {
-            countMap[string] = count
-            count = 0
-        }
+        countMap[string] = count
+        count = 0
     }
     return countMap
 }
@@ -90,7 +123,32 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+
+    val outputStream = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty()) {
+            outputStream.newLine()
+//            if (currentLineLength > 0) {
+//                outputStream.newLine()
+//                currentLineLength = 0
+//            }
+//            continue
+        }
+        for (word in line.split(" ")) {
+//            outputStream.write(" ")
+            for (i in 0 until word.length) {
+                if (word[i] == 'ж' && word[i+1] == 'ы') {
+                    word[i + 1] == 'и'
+                } else if (word[i] == 'ч' && word[i+1] == 'я') {
+                    word[i + 1] == 'а'
+                } else if ((word[i] == 'ш' || word[i] == 'щ') && word[i+1] == 'ю') {
+                    word[i + 1] == 'у'
+                }
+                outputStream.write(word)
+            }
+        }
+    }
+    outputStream.close()
 }
 
 /**
