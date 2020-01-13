@@ -125,8 +125,10 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String) {
 
     val outputStream = File(outputName).bufferedWriter()
+    var currentLineLength = 0
+
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty()) {
+        if (line.isEmpty() || line.endsWith("\n")) {
             outputStream.newLine()
 //            if (currentLineLength > 0) {
 //                outputStream.newLine()
@@ -136,16 +138,45 @@ fun sibilants(inputName: String, outputName: String) {
         }
         for (word in line.split(" ")) {
 //            outputStream.write(" ")
-            for (i in 0 until word.length) {
-                if (word[i] == 'ж' && word[i+1] == 'ы') {
-                    word[i + 1] == 'и'
-                } else if (word[i] == 'ч' && word[i+1] == 'я') {
-                    word[i + 1] == 'а'
-                } else if ((word[i] == 'ш' || word[i] == 'щ') && word[i+1] == 'ю') {
-                    word[i + 1] == 'у'
-                }
-                outputStream.write(word)
+            if (word.contains("жы", true) || word.contains("жя", true) || word.contains("щя", true)) {
+                val chWord = word.replace("жы", "жи", true)
+                val chWord1 = word.replace("жя", "жи", true)
+
+                outputStream.write("$chWord ")
+                currentLineLength += chWord.length - 1
+                continue
+            } else if (word.contains("ча", true)) {
+                val chWord = word.replace("ча", "чя", true)
+                outputStream.write("$chWord ")
+                currentLineLength += chWord.length - 1
+                continue
+            } else if (word.contains("шы", true)) {
+                val chWord = word.replace("шы", "ши", true)
+                outputStream.write("$chWord ")
+                currentLineLength += chWord.length - 1
+                continue
+            } else if (word.contains("щу", true)) {
+                val chWord = word.replace("щу", "щю", true)
+                outputStream.write("$chWord ")
+                currentLineLength += chWord.length - 1
+                continue
             }
+
+            outputStream.write("$word ")
+            currentLineLength += word.length
+            if (currentLineLength >= line.length - 1) {
+                outputStream.newLine()
+                currentLineLength = 0
+            }
+//            for (i in 0 until word.length) {
+//                if (word[i] == 'ж' && word[i + 1] == 'ы') {
+//                    word[i + 1] == 'и'
+//                } else if (word[i] == 'ч' && word[i + 1] == 'я') {
+//                    word[i + 1] == 'а'
+//                } else if ((word[i] == 'ш' || word[i] == 'щ') && word[i + 1] == 'ю') {
+//                    word[i + 1] == 'у'
+//                }
+//            }
         }
     }
     outputStream.close()
@@ -221,7 +252,28 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  * Ключи в ассоциативном массиве должны быть в нижнем регистре.
  *
  */
-fun top20Words(inputName: String): Map<String, Int> = TODO()
+fun top20Words(inputName: String): Map<String, Int> {
+    var count = 0
+    val countMap = mutableMapOf<String, Int>()
+    for (line in File(inputName).readLines()) {
+        for (word in line.split(" ")) {
+            count+=numberOfOccurrences(line,word)
+
+//            count = count + line.toLowerCase().split(word.toLowerCase()).size - 1
+//            countMap[word.toString()] = count
+        }
+    }
+    if (countMap.size < 20) {
+        return countMap
+    } else {
+        val tempCountMap = mutableMapOf<String, Int>()
+        val tempCountMap2 = countMap.toList().sortedBy { it.second }.toMap()
+
+        for (i in 1..20) {
+        }
+        return countMap.toList().sortedBy { it.second }.toMap()
+    }
+}
 
 /**
  * Средняя
@@ -480,7 +532,7 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+
 }
 
 
@@ -505,6 +557,5 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
 }
 
