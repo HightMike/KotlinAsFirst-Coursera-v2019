@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import java.lang.StringBuilder
 
 /**
  * Пример
@@ -128,58 +129,72 @@ fun sibilants(inputName: String, outputName: String) {
     var currentLineLength = 0
 
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty() || line.endsWith("\n")) {
-            outputStream.newLine()
-//            if (currentLineLength > 0) {
-//                outputStream.newLine()
-//                currentLineLength = 0
-//            }
-//            continue
-        }
         for (word in line.split(" ")) {
-//            outputStream.write(" ")
-            if (word.contains("жы", true) || word.contains("жя", true) || word.contains("щя", true)) {
-                val chWord = word.replace("жы", "жи", true)
-                val chWord1 = word.replace("жя", "жи", true)
+            if ((Regex(
+                    """(жы)|(шы)|(шя)|(жя)|(чя)|(щю)|(щя)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
+                    RegexOption.IGNORE_CASE
+                )).containsMatchIn(input = word.toLowerCase())
+            ) {
+                val tempWord = word
+                val chWord = tempWord.toLowerCase().replace(
+                    Regex(
+                        """(жы)|(шы)|(шя)|(жя)|(чя)|(щю)|(щя)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
+                        RegexOption.IGNORE_CASE
+                    )
+                ) {
+                    when (it.value) {
+                        "жы" -> "жи"
+                        "шы" -> "ши"
+                        "шя" -> "ша"
+                        "жя" -> "жа"
+                        "чя" -> "ча"
+                        "щю" -> "щу"
+                        "щя" -> "ща"
+                        "жю" -> "жу"
+                        "шю" -> "шу"
+                        "чю" -> "чу"
+                        "брошюра" -> "брошура"
+                        "парашют" -> "парашут"
+                        "жюри" -> "жури"
+                        else -> it.value
 
-                outputStream.write("$chWord ")
-                currentLineLength += chWord.length - 1
-                continue
-            } else if (word.contains("ча", true)) {
-                val chWord = word.replace("ча", "чя", true)
-                outputStream.write("$chWord ")
-                currentLineLength += chWord.length - 1
-                continue
-            } else if (word.contains("шы", true)) {
-                val chWord = word.replace("шы", "ши", true)
-                outputStream.write("$chWord ")
-                currentLineLength += chWord.length - 1
-                continue
-            } else if (word.contains("щу", true)) {
-                val chWord = word.replace("щу", "щю", true)
-                outputStream.write("$chWord ")
-                currentLineLength += chWord.length - 1
-                continue
-            }
+                    }
+                }
+                val upWord = checkCase(word, chWord)
 
-            outputStream.write("$word ")
-            currentLineLength += word.length
-            if (currentLineLength >= line.length - 1) {
-                outputStream.newLine()
-                currentLineLength = 0
+                if (currentLineLength < line.length - upWord.length) {
+                    outputStream.write("$upWord ")
+                    currentLineLength += upWord.length + 1
+                } else {
+                    outputStream.write(upWord)
+                    outputStream.newLine()
+                    currentLineLength = 0
+                }
+            } else {
+                if (currentLineLength < line.length - word.length) {
+                    outputStream.write("$word ")
+                    currentLineLength += word.length + 1
+                } else {
+                    outputStream.write(word)
+                    outputStream.newLine()
+                    currentLineLength = 0
+                }
             }
-//            for (i in 0 until word.length) {
-//                if (word[i] == 'ж' && word[i + 1] == 'ы') {
-//                    word[i + 1] == 'и'
-//                } else if (word[i] == 'ч' && word[i + 1] == 'я') {
-//                    word[i + 1] == 'а'
-//                } else if ((word[i] == 'ш' || word[i] == 'щ') && word[i + 1] == 'ю') {
-//                    word[i + 1] == 'у'
-//                }
-//            }
         }
     }
     outputStream.close()
+}
+
+fun checkCase(first: String, second: String): String {
+    val upWord = StringBuilder()
+    for (i in 0..first.length - 1) {
+        if (first[i].isUpperCase()) {
+            upWord.append(second[i].toUpperCase())
+        } else {
+            upWord.append(second[i])
+        }
+    }
+    return upWord.toString()
 }
 
 /**
@@ -257,7 +272,7 @@ fun top20Words(inputName: String): Map<String, Int> {
     val countMap = mutableMapOf<String, Int>()
     for (line in File(inputName).readLines()) {
         for (word in line.split(" ")) {
-            count+=numberOfOccurrences(line,word)
+            count += numberOfOccurrences(line, word)
 
 //            count = count + line.toLowerCase().split(word.toLowerCase()).size - 1
 //            countMap[word.toString()] = count
