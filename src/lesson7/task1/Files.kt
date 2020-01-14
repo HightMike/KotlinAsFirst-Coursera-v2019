@@ -4,6 +4,7 @@ package lesson7.task1
 
 import java.io.File
 import java.lang.StringBuilder
+import java.util.*
 
 /**
  * Пример
@@ -75,33 +76,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val countMap = mutableMapOf<String, Int>()
     for (string in substrings) {
         for (line in File(inputName).readLines()) {
-//            val p = Pattern.compile(string.toLowerCase())
-//            val m = p.matcher(line.toLowerCase())
-//            while (m.find()) {
-//                count++
-//            }
-//            for (word in line.split(" ")) {
-//                var j = 0
-//                while (j < word.length) {
-//                    if (word.toLowerCase().toLowerCase().contains(string.toLowerCase())) {
-//                        count++
-//                        j += string.length - 1
-//                    }
-//                    j++
-//                }
-//            }
-//            for (word in line.split(" ")) {
-//                var j = 0
-//                while (j < word.length) {
-//                    if (word.toLowerCase().contains(string.toLowerCase())) {
-//                        count = count + word.toLowerCase().split(string.toLowerCase()).size - 1
-//                    }
-//                }
-//            }
-
             count = count + line.toLowerCase().split(string.toLowerCase()).size - 1
-
-//            count += numberOfOccurrences(line.toLowerCase(), string.toLowerCase())
         }
         countMap[string] = count
         count = 0
@@ -131,25 +106,29 @@ fun sibilants(inputName: String, outputName: String) {
     for (line in File(inputName).readLines()) {
         for (word in line.split(" ")) {
             if ((Regex(
-                    """(жы)|(шы)|(шя)|(жя)|(чя)|(щю)|(щя)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
+                    """(жы)|(шы)|(щы)|(чы)|(шя)|(жя)|(чя)|(щя)|(щю)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
                     RegexOption.IGNORE_CASE
                 )).containsMatchIn(input = word.toLowerCase())
             ) {
                 val tempWord = word
                 val chWord = tempWord.toLowerCase().replace(
                     Regex(
-                        """(жы)|(шы)|(шя)|(жя)|(чя)|(щю)|(щя)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
+                        """(жы)|(шы)|(щы)|(чы)|(шя)|(жя)|(чя)|(щя)|(щю)|(жю)|(шю)|(чю)|(брошюра)|(парашют)|(жюри)""",
                         RegexOption.IGNORE_CASE
                     )
                 ) {
                     when (it.value) {
                         "жы" -> "жи"
                         "шы" -> "ши"
-                        "шя" -> "ша"
+                        "щы" -> "щи"
+                        "чы" -> "чи"
+
                         "жя" -> "жа"
-                        "чя" -> "ча"
-                        "щю" -> "щу"
+                        "шя" -> "ша"
                         "щя" -> "ща"
+                        "чя" -> "ча"
+
+                        "щю" -> "щу"
                         "жю" -> "жу"
                         "шю" -> "шу"
                         "чю" -> "чу"
@@ -268,26 +247,30 @@ fun alignFileByWidth(inputName: String, outputName: String) {
  *
  */
 fun top20Words(inputName: String): Map<String, Int> {
-    var count = 0
-    val countMap = mutableMapOf<String, Int>()
+    val newList = mutableListOf<String>()
     for (line in File(inputName).readLines()) {
-        for (word in line.split(" ")) {
-            count += numberOfOccurrences(line, word)
-
-//            count = count + line.toLowerCase().split(word.toLowerCase()).size - 1
-//            countMap[word.toString()] = count
+        for (word in line.toLowerCase().split(Regex("""[^\pL]"""))) {
+            if (word != "") {
+                newList.add(word)
+            }
         }
     }
-    if (countMap.size < 20) {
-        return countMap
+
+    return if (tempMap(newList).size < 20) {
+        tempMap(newList)
     } else {
-        val tempCountMap = mutableMapOf<String, Int>()
-        val tempCountMap2 = countMap.toList().sortedBy { it.second }.toMap()
-
-        for (i in 1..20) {
-        }
-        return countMap.toList().sortedBy { it.second }.toMap()
+        val curMap = tempMap(newList).toList().sortedBy { it.second }.reversed().subList(0,20).toMap()
+        curMap
     }
+}
+
+fun tempMap(newList: List<String>): Map<String, Int> {
+    val curMap = mutableMapOf<String, Int>()
+    for (word in newList) {
+        val occurrences = Collections.frequency(newList, word)
+        curMap[word] = occurrences
+    }
+    return curMap
 }
 
 /**
